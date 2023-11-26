@@ -10,6 +10,7 @@ class Main {
         Naruto.ShowStatus();
         Sasuke.ShowStatus();
 
+
         Naruto.equipSword();
         Naruto.ShowStatus();
 

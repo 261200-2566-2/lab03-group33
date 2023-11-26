@@ -2,6 +2,7 @@ public class Sword {
 
     private String type;
     public int level;
+
     public int baseDamage;
 
     public Sword(String type, int level) {
