@@ -1,0 +1,230 @@
+
+public class RPGCharacter {
+
+    private String name;
+    private int maxHP;
+    private int maxMana;
+    private int currentHP;
+    private int currentMana;
+    private int level;
+    Sword mySword;
+    Shield myShield;
+    private double baseRunSpeed;
+    private boolean isEquipSword;
+    private boolean isEquipShield;
+    private double cachedRunSpeed;
+
+    public RPGCharacter(String name, int level) {
+
+        this.name = name;
+        this.level = level;
+        this.maxHP = 100 + 10 * level;
+        this.currentHP = maxHP;
+        this.maxMana = 50 + 2 * level;
+        this.baseRunSpeed = 5;
+        this.currentMana = maxMana;
+        this.isEquipSword = false;
+        this.isEquipShield = false;
+        mySword = new Sword("Wooden", 1);
+        myShield = new Shield("Wooden", 1);
+        System.out.println("The character " + name + " level " + level + " has been created");
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCurrentHP() {
+        return currentHP;
+    }
+
+    public int getCurrentMana() {
+        return currentMana;
+    }
+
+    public void ShowStatus() {
+
+        System.out.println();
+        System.out.println("----------" + name + "----------");
+        System.out.println("     Level: " + level);
+        System.out.println("        HP: " + currentHP);
+        System.out.println("      Mana: " + currentMana);
+        System.out.println(" Run Speed: " + getRunSpeed());
+
+        if (isEquipSword) {
+            System.out
+                    .println(" [Level " + mySword.getLevel() + "] " + mySword.getType() + " Sword Damage: " + mySword.getDamage());
+        } else {
+            System.out.println(" " + name + " doesn't have Sword");
+        }
+
+        if (isEquipShield) {
+            System.out.println(
+                    " [Level " + myShield.getLevel() + "] " + myShield.getType() + " Shield Defense :" + myShield.getDefense());
+        } else {
+            System.out.println(" " + name + " doesn't have Shield");
+        }
+
+        System.out.println("--------------------------");
+
+    }
+
+    public void levelup() {
+
+        System.out.println();
+        System.out.println("-----" + name + " leveled up-----");
+        int levelTemp = level;
+        double oldRunSpeed = getRunSpeed();
+        level++;
+        int hpTemp = currentHP;
+        cachedRunSpeed = 0;
+        int manaTemp = currentMana;
+        currentHP = currentHP + 10;
+        currentMana = currentMana + 2;
+
+        System.out.println("   Level: " + levelTemp + " --> " + level);
+        System.out.println("      HP: " + hpTemp + " --> " + currentHP);
+        System.out.println("    Mana: " + manaTemp + " --> " + currentMana);
+        System.out.println("    Speed: " + oldRunSpeed + " --> " + getRunSpeed());
+        System.out.println("----------------------------");
+        System.out.println();
+    }
+
+    public void Attack(RPGCharacter Target) {
+        System.out.println();
+        System.out.println("--------------------------");
+
+        if (isEquipSword) {
+            if (Target.isEquipShield) {
+                if (Target.myShield.getDefense() <= mySword.getDamage()) {
+                    int hptemp = Target.currentHP;
+                    Target.currentHP -= mySword.getDamage();
+                    Target.currentHP += Target.myShield.getDefense();
+                    System.out.println(" " + name + " dealt " + mySword.getDamage() + " damage to "
+                            + Target.getName());
+                    System.out.println(" " + Target.getName() + " blocked " + Target.myShield.getDefense() + " damage");
+                    System.out.println(" " + Target.getName() + "'s HP = " + hptemp + "-->" + Target.getCurrentHP());
+                } else {
+                    System.out.println(Target.getName() + " blocked all damage");
+                    System.out.println(" " + name + " dealt " + mySword.getDamage() + " damage to " + Target.getName());
+                    System.out.println(" " + Target.getName() + "'s HP = " + Target.getCurrentHP());
+                }
+            } else {
+                int hptemp = Target.currentHP;
+                Target.currentHP -= mySword.getDamage();
+                System.out.println(" " + name + " dealt " + mySword.getDamage() + " damage to " + Target.getName());
+                System.out.println(" " + Target.getName() + "'s HP = " + hptemp + "-->" + Target.getCurrentHP());
+            }
+        } else {
+
+            System.out.println("Cannot attack," + name + " doesn't have sword");
+        }
+
+        System.out.println("--------------------------");
+
+    }
+
+    public void equipSword() {
+        if (isEquipSword) {
+            System.out.println("->" + name + " already equip Sword");
+        } else {
+            cachedRunSpeed = 0;
+            isEquipSword = true;
+            System.out.println("->" + name + " equips a [level " + mySword.getLevel() + "] " + mySword.getType() + " Sword");
+        }
+    }
+
+    public void unequipSword() {
+        if (isEquipSword) {
+            cachedRunSpeed = 0;
+            isEquipSword = false;
+            System.out.println("unequipped Sword");
+
+        } else {
+            System.out.println("already unequipped, no need to do it again");
+        }
+    }
+
+    public void equipShield() {
+        if (isEquipShield) {
+            System.out.println("->" + name + " already equipped Shield");
+        } else {
+            cachedRunSpeed = 0;
+            isEquipShield = true;
+            System.out
+                    .println("->" + name + " equips a [level " + myShield.getLevel() + "] " + myShield.getType() + " Shield");
+        }
+    }
+
+    public void unequipShield() {
+        if (isEquipShield) {
+            cachedRunSpeed = 0;
+            isEquipShield = false;
+            System.out.println("->" + name +"unequipped Shield");
+        } else {
+            System.out.println("already unequipped, no need to do it again");
+        }
+    }
+
+    public void SwordLevelUp(){
+        if(isEquipSword){
+
+            int lvltemp = mySword.level;
+            mySword.level++;
+            System.out.println(mySword.getType() + "sword Level"+lvltemp+"->"+mySword.level);
+            mySword.baseDamage += mySword.level;
+            cachedRunSpeed = 0;
+
+        }
+        else System.out.println(getName() + " have no sword, cannot level up");
+    }
+
+    public void ShieldLevelUp(){
+        if(isEquipShield){
+            int lvltemp = myShield.level;
+            myShield.level++;
+            System.out.println(myShield.getType() + "shield Level"+lvltemp+"->"+myShield.level);
+            myShield.baseDefense += myShield.level;
+            cachedRunSpeed = 0;
+        }else System.out.println(getName() + " have no shield, cannot level up");
+
+    }
+
+    public double getRunSpeed() {
+        if (cachedRunSpeed == 0) {
+            calculateAndCacheRunSpeed();
+        }
+        return Math.round(cachedRunSpeed * 10) / 10.0;
+
+    }
+
+    private void calculateAndCacheRunSpeed() {
+        if (cachedRunSpeed == 0) {
+            cachedRunSpeed = baseRunSpeed * (1 + 0.3 * level);
+
+            if (isEquipSword) {
+                cachedRunSpeed -= calculateSwordRunSpeedDecrease();
+            }
+
+            if (isEquipShield) {
+                cachedRunSpeed -= calculateShieldRunSpeedDecrease();
+            }
+        }
+    }
+
+
+    private double calculateSwordRunSpeedDecrease() {
+        return baseRunSpeed * (0.1 + 0.04 * mySword.getLevel());
+    }
+
+    private double calculateShieldRunSpeedDecrease() {
+        return baseRunSpeed * (0.1 + 0.08 * myShield.getLevel());
+
+    }
+
+    public void showSpeed() {
+        System.out.println("->"+name+" Current Run Speed: " + getRunSpeed());
+    }
+
+
+}
