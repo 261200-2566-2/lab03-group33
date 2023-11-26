@@ -3,6 +3,7 @@ public class RPGCharacter {
 
     private String name;
     private int maxHP;
+
     private int maxMana;
     private int currentHP;
     private int currentMana;

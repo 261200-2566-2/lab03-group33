@@ -2,6 +2,7 @@ public class Shield{
 
     private String type;
     public int level;
+
     public int baseDefense;
 
     public Shield(String type, int level) {
